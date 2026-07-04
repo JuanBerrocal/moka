@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moka.Data;
 using Moka.Models;
+using Moka.DTOs;
 
 namespace Moka.Controllers
 {
@@ -17,46 +18,52 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Store>>> GetStores()
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores()
         {
 
             var stores = await _mokaDbContext.Stores.ToListAsync();
+            var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode});
 
-            return Ok(stores);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Store>> CreateStore(Store store)
+        public async Task<ActionResult<StoreDto>> CreateStore(CreateStoreDto storeDto)
         {
+
+            var store = new Store
+            {
+                Name = storeDto.Name,
+                SapCode = storeDto.SapCode
+            };
 
             _mokaDbContext.Stores.Add(store);
 
             await _mokaDbContext.SaveChangesAsync();
 
+            var result = new StoreDto { Name = store.Name, SapCode = storeDto.SapCode };
+
             return CreatedAtAction( nameof(GetStoreById),
                 new {id = store.Id },
-                store);
+                result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Store>> GetStoreById(int id)
+        public async Task<ActionResult<StoreDto>> GetStoreById(int id)
         {
             var store = await _mokaDbContext.Stores.FindAsync(id);
 
             if (store == null) 
                 return NotFound();
 
-            return Ok(store);
+            var result = new StoreDto { Id = store.Id, Name = store.Name, SapCode = store.SapCode}; 
+
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateStore(int id, Store updatedStore)
+        public async Task<ActionResult> UpdateStore(int id, UpdateStoreDto updatedStore)
         {
-
-            if (id != updatedStore.Id) 
-            {
-                return BadRequest();
-            }
 
             var store = await _mokaDbContext.Stores.FindAsync(id);
 
