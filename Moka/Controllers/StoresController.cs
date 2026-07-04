@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Moka.Data;
 using Moka.Models;
 using Moka.DTOs;
+using System.Reflection.Emit;
 
 namespace Moka.Controllers
 {
@@ -31,10 +32,17 @@ namespace Moka.Controllers
         public async Task<ActionResult<StoreDto>> CreateStore(CreateStoreDto storeDto)
         {
 
+            var exists = await _mokaDbContext.Stores.AnyAsync(s => s.SapCode == storeDto.SapCode);
+
+            if (exists)
+            {
+                return Conflict("SAP code already exists.");
+            }
+
             var store = new Store
             {
-                Name = storeDto.Name,
-                SapCode = storeDto.SapCode
+                Name = storeDto.Name.Trim().ToUpper(),
+                SapCode = storeDto.SapCode?.Trim().ToUpper()
             };
 
             _mokaDbContext.Stores.Add(store);
@@ -62,9 +70,14 @@ namespace Moka.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateStore(int id, UpdateStoreDto updatedStore)
+        public async Task<ActionResult> UpdateStore(int id, UpdateStoreDto updatedStoreDto)
         {
+            var exists = await _mokaDbContext.Stores.AnyAsync(s => (s.Id != id) && (s.SapCode == updatedStoreDto.SapCode));
 
+            if (exists)
+            {
+                return Conflict("SAP code already exists.");
+            }
             var store = await _mokaDbContext.Stores.FindAsync(id);
 
             if (store == null)
@@ -72,9 +85,9 @@ namespace Moka.Controllers
                 return NotFound();
             }
 
-            store.Name = updatedStore.Name;
-            store.SapCode = updatedStore.SapCode;
-
+            store.Name = updatedStoreDto.Name.Trim().ToUpper();
+            store.SapCode = updatedStoreDto.SapCode?.Trim().ToUpper();
+            
             await _mokaDbContext.SaveChangesAsync();
 
             return NoContent();
