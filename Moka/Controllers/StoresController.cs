@@ -4,6 +4,7 @@ using Moka.Data;
 using Moka.Models;
 using Moka.DTOs;
 using System.Reflection.Emit;
+using System;
 
 namespace Moka.Controllers
 {
@@ -25,6 +26,7 @@ namespace Moka.Controllers
         {
 
             _mokaLogger.LogInformation("Getting all stores.");
+            
 
             var stores = await _mokaDbContext.Stores.ToListAsync();
             var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode});
