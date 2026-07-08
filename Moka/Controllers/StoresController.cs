@@ -22,13 +22,23 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores()
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name)
         {
 
             _mokaLogger.LogInformation("Getting all stores.");
 
-            var stores = await _mokaDbContext.Stores.ToListAsync();
-            var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode});
+            /*var stores = await _mokaDbContext.Stores.ToListAsync();
+            var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode});*/
+
+            IQueryable<Store> query = _mokaDbContext.Stores;
+
+            if(!string.IsNullOrWhiteSpace(name)) 
+            {
+                query = query.Where(x => x.Name.Contains(name)); 
+            }
+            
+            var stores = await query.ToListAsync();
+            var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode });
 
             return Ok(result);
         }
