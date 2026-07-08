@@ -8,6 +8,23 @@ namespace Moka.middleware
         private RequestDelegate _next;
         private ILogger<ExceptionMiddleware> _logger;
 
+        private Task HandleExceptionAsync(HttpContext context, Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected exception ocurred.");
+
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/json";
+
+            var problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "An unexpected exception ocurred.",
+                Detail = "Please contact the administrator."
+            };
+
+            return context.Response.WriteAsJsonAsync(problemDetails);
+        }
+
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
@@ -22,19 +39,8 @@ namespace Moka.middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unexpected exception ocurred.");
 
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                context.Response.ContentType = "application/json";
-
-                var problemDetails = new ProblemDetails 
-                { 
-                    Status = StatusCodes.Status500InternalServerError,
-                    Title = "An unexpected exception ocurred.",
-                    Detail = "Please contact the administrator."
-                };
-
-                await context.Response.WriteAsJsonAsync(problemDetails);
+                await HandleExceptionAsync(context, ex);
             }
         }
     }
