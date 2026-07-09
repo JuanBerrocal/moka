@@ -37,8 +37,7 @@ namespace Moka.Controllers
                 query = query.Where(x => x.Name.Contains(name)); 
             }
             
-            var stores = await query.ToListAsync();
-            var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode });
+            var result = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
 
             return Ok(result);
         }
