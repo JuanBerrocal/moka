@@ -22,21 +22,27 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name)
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode)
         {
 
             _mokaLogger.LogInformation("Getting all stores.");
-
-            /*var stores = await _mokaDbContext.Stores.ToListAsync();
-            var result = stores.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode});*/
 
             IQueryable<Store> query = _mokaDbContext.Stores;
 
             if(!string.IsNullOrWhiteSpace(name)) 
             {
+                name = name.Trim().ToUpper();
+
                 query = query.Where(x => x.Name.Contains(name)); 
             }
-            
+
+            if (!string.IsNullOrWhiteSpace(sapCode))
+            {
+                sapCode = sapCode.Trim().ToUpper();
+
+                query = query.Where(x => x.SapCode!.StartsWith(sapCode));
+            }
+
             var result = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
 
             return Ok(result);
@@ -47,13 +53,6 @@ namespace Moka.Controllers
         {
 
             _mokaLogger.LogInformation("Creating a new store.");
-
-            var exists = await _mokaDbContext.Stores.AnyAsync(s => s.SapCode == storeDto.SapCode);
-
-            if (exists)
-            {
-                return Conflict("SAP code already exists.");
-            }
 
             var store = new Store
             {
@@ -98,13 +97,6 @@ namespace Moka.Controllers
         {
             _mokaLogger.LogInformation("Updating the store {id}.", id);
 
-            var exists = await _mokaDbContext.Stores.AnyAsync(s => (s.Id != id) && (s.SapCode == updatedStoreDto.SapCode));
-
-            if (exists)
-            {
-                _mokaLogger.LogWarning("Updating store with the SAP code {id} that already exists.", id);
-                return Conflict("SAP code already exists.");
-            }
             var store = await _mokaDbContext.Stores.FindAsync(id);
 
             if (store == null)

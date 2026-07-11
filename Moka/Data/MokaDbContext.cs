@@ -17,7 +17,7 @@ namespace Moka.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Store>().HasIndex(s => s.SapCode).IsUnique();
+            modelBuilder.Entity<Store>().HasIndex(s => s.SapCode);
         }
     }
 }
