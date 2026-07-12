@@ -22,7 +22,7 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort)
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort, string? direction)
         {
 
             _mokaLogger.LogInformation("Getting all stores.");
@@ -44,18 +44,28 @@ namespace Moka.Controllers
             }
 
             sort = sort?.Trim().ToLower() ?? "name";
+            direction = direction?.Trim().ToLower() ?? "asc";
 
             switch (sort)
             {
                 case "sapcode":
-                    query = query.OrderBy(x => x.SapCode);
+                    if (direction == "desc")
+                        query = query.OrderByDescending(x => x.SapCode);
+                    else
+                        query = query.OrderBy(x => x.SapCode);
                     break;
                 case "id":
-                    query = query.OrderBy(x => x.Id);
+                    if (direction == "desc")
+                        query = query.OrderByDescending (x => x.Id);
+                    else
+                        query = query.OrderBy(x => x.Id);
                     break;
                 case "name":
                 default:
-                    query = query.OrderBy(x => x.Name);
+                    if (direction == "desc")
+                        query = query.OrderByDescending(x => x.Name);
+                    else
+                        query = query.OrderBy(x => x.Name);
                     break;
                 }   
             
