@@ -22,7 +22,7 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode)
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort)
         {
 
             _mokaLogger.LogInformation("Getting all stores.");
@@ -41,6 +41,24 @@ namespace Moka.Controllers
                 sapCode = sapCode.Trim().ToUpper();
 
                 query = query.Where(x => x.SapCode!.StartsWith(sapCode));
+            }
+
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                sort = sort.Trim().ToLower();
+
+                switch (sort)
+                {
+                    case "name":
+                        query = query.OrderBy(x => x.Name);
+                        break;
+                    case "sapcode":
+                        query = query.OrderBy(x => x.SapCode);
+                        break;
+                    case "id":
+                        query = query.OrderBy(x => x.Id);
+                        break;
+                }   
             }
 
             var result = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
