@@ -43,23 +43,22 @@ namespace Moka.Controllers
                 query = query.Where(x => x.SapCode!.StartsWith(sapCode));
             }
 
-            if (!string.IsNullOrWhiteSpace(sort))
-            {
-                sort = sort.Trim().ToLower();
+            sort = sort?.Trim().ToLower() ?? "name";
 
-                switch (sort)
-                {
-                    case "name":
-                        query = query.OrderBy(x => x.Name);
-                        break;
-                    case "sapcode":
-                        query = query.OrderBy(x => x.SapCode);
-                        break;
-                    case "id":
-                        query = query.OrderBy(x => x.Id);
-                        break;
+            switch (sort)
+            {
+                case "sapcode":
+                    query = query.OrderBy(x => x.SapCode);
+                    break;
+                case "id":
+                    query = query.OrderBy(x => x.Id);
+                    break;
+                case "name":
+                default:
+                    query = query.OrderBy(x => x.Name);
+                    break;
                 }   
-            }
+            
 
             var result = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
 
