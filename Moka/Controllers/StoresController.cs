@@ -22,7 +22,7 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort, string? direction)
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort, string? direction, int page = 1, int pageSize = 20)
         {
 
             _mokaLogger.LogInformation("Getting all stores.");
@@ -67,8 +67,23 @@ namespace Moka.Controllers
                     else
                         query = query.OrderBy(x => x.Name);
                     break;
-                }   
-            
+                }
+
+            int totalItems = await query.CountAsync();
+
+            // Pagination validations.
+            if (page < 1)
+            {
+                return BadRequest("Page number must be 1 or greater.");
+            }
+            if (pageSize < 1 || pageSize > 100)
+            {
+                return BadRequest("Page size must be between 1 and 100.");
+            }
+
+            // How many rows to be skipped.
+            int skip = (page -1) * pageSize;
+            query.Skip(skip).Take(pageSize);
 
             var result = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
 
