@@ -83,9 +83,11 @@ namespace Moka.Controllers
 
             // How many rows to be skipped.
             int skip = (page -1) * pageSize;
-            query.Skip(skip).Take(pageSize);
+            query = query.Skip(skip).Take(pageSize);
 
-            var result = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
+            var stores = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
+
+            var result = new PagedResult<StoreDto> { TotalItems = totalItems, Page = page, PageSize = pageSize, Items = stores };
 
             return Ok(result);
         }
