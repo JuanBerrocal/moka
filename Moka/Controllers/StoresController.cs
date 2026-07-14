@@ -25,9 +25,9 @@ namespace Moka.Controllers
         public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort, string? direction, int page = 1, int pageSize = 20)
         {
 
-            _mokaLogger.LogInformation("Getting all stores.");
+            _mokaLogger.LogInformation("Getting stores.");
 
-            IQueryable<Store> query = _mokaDbContext.Stores;
+            IQueryable<Store> query = _mokaDbContext.Stores.AsNoTracking();
 
             if(!string.IsNullOrWhiteSpace(name)) 
             {
@@ -123,7 +123,7 @@ namespace Moka.Controllers
 
             _mokaLogger.LogInformation("Getting the store {id}.", id);
 
-            var store = await _mokaDbContext.Stores.FindAsync(id);
+            var store = await _mokaDbContext.Stores.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
 
             if (store == null) {
                 _mokaLogger.LogWarning("Store {id} to be deleted not found.", id);
