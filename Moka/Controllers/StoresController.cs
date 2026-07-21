@@ -22,7 +22,8 @@ namespace Moka.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(string? name, string? sapCode, string? sort, string? direction, int page = 1, int pageSize = 20)
+        public async Task<ActionResult<IEnumerable<StoreDto>>> GetStores(
+            string? name, string? sapCode, string? tradeName, string? sort, string? direction, int page = 1, int pageSize = 20)
         {
 
             _mokaLogger.LogInformation("Getting stores.");
@@ -43,6 +44,13 @@ namespace Moka.Controllers
                 query = query.Where(x => x.SapCode!.StartsWith(sapCode));
             }
 
+            if (!string.IsNullOrWhiteSpace(tradeName))
+            {
+                tradeName = tradeName.Trim().ToUpper();
+
+                query = query.Where(x => x.TradeName!.Contains(tradeName));
+            }
+
             sort = sort?.Trim().ToLower() ?? "name";
             direction = direction?.Trim().ToLower() ?? "asc";
 
@@ -59,6 +67,12 @@ namespace Moka.Controllers
                         query = query.OrderByDescending (x => x.Id);
                     else
                         query = query.OrderBy(x => x.Id);
+                    break;
+                case "tradename":
+                    if (direction == "desc")
+                        query = query.OrderByDescending(x => x.TradeName);
+                    else
+                        query = query.OrderBy(x => x.TradeName);
                     break;
                 case "name":
                 default:
@@ -85,7 +99,17 @@ namespace Moka.Controllers
             int skip = (page -1) * pageSize;
             query = query.Skip(skip).Take(pageSize);
 
-            var stores = await query.Select(s => new StoreDto { Id = s.Id, Name = s.Name, SapCode = s.SapCode }).ToListAsync();
+            var stores = await query.Select(s => new StoreDto { 
+                Id = s.Id,
+                Name = s.Name,
+                SapCode = s.SapCode,
+                TradeName = s.TradeName,
+                Address = s.Address,
+                PostalCode = s.PostalCode,
+                City = s.City,
+                TaxId = s.TaxId,
+                Notes = s.Notes
+            }).ToListAsync();
 
             var result = new PagedResult<StoreDto> { TotalItems = totalItems, Page = page, PageSize = pageSize, Items = stores };
 
@@ -101,14 +125,30 @@ namespace Moka.Controllers
             var store = new Store
             {
                 Name = storeDto.Name.Trim().ToUpper(),
-                SapCode = storeDto.SapCode?.Trim().ToUpper()
+                SapCode = storeDto.SapCode?.Trim().ToUpper(),
+                TradeName = storeDto.TradeName?.Trim().ToUpper(),
+                Address = storeDto.Address?.Trim().ToUpper(),
+                PostalCode = storeDto.PostalCode?.Trim().ToUpper(),
+                City = storeDto.City?.Trim().ToUpper(),
+                TaxId = storeDto.TaxId?.Trim().ToUpper(),
+                Notes = storeDto.Notes?.Trim()
             };
-
+                        
             _mokaDbContext.Stores.Add(store);
 
             await _mokaDbContext.SaveChangesAsync();
 
-            var result = new StoreDto { Name = store.Name, SapCode = storeDto.SapCode };
+            var result = new StoreDto { 
+                Id = store.Id,
+                Name = store.Name, 
+                SapCode = store.SapCode,
+                TradeName = store.TradeName,
+                Address = store.Address,
+                PostalCode = store.PostalCode,
+                City = store.City,
+                TaxId = store.TaxId,
+                Notes = store.Notes
+            };
 
             _mokaLogger.LogInformation("New store {Name} created.", storeDto.Name);
 
@@ -129,9 +169,19 @@ namespace Moka.Controllers
                 _mokaLogger.LogWarning("Store {id} to be deleted not found.", id);
                 return NotFound();
             }
-                
 
-            var result = new StoreDto { Id = store.Id, Name = store.Name, SapCode = store.SapCode}; 
+            var result = new StoreDto
+            {
+                Id = store.Id,
+                Name = store.Name,
+                SapCode = store.SapCode,
+                TradeName = store.TradeName,
+                Address = store.Address,
+                PostalCode = store.PostalCode,
+                City = store.City,
+                TaxId = store.TaxId,
+                Notes = store.Notes
+            };
 
             return Ok(result);
         }
@@ -151,7 +201,13 @@ namespace Moka.Controllers
 
             store.Name = updatedStoreDto.Name.Trim().ToUpper();
             store.SapCode = updatedStoreDto.SapCode?.Trim().ToUpper();
-            
+            store.TradeName = updatedStoreDto.TradeName?.Trim().ToUpper();
+            store.Address = updatedStoreDto.Address?.Trim().ToUpper();
+            store.PostalCode = updatedStoreDto.PostalCode?.Trim().ToUpper();
+            store.City = updatedStoreDto.City?.Trim().ToUpper();
+            store.TaxId = updatedStoreDto.TaxId?.Trim().ToUpper();
+            store.Notes = updatedStoreDto.Notes?.Trim();
+
             await _mokaDbContext.SaveChangesAsync();
 
             _mokaLogger.LogInformation("Store {Id} updated", id);

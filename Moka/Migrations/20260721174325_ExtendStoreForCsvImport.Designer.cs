@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moka.Data;
 
@@ -10,9 +11,11 @@ using Moka.Data;
 namespace Moka.Migrations
 {
     [DbContext(typeof(MokaDbContext))]
-    partial class MokaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260721174325_ExtendStoreForCsvImport")]
+    partial class ExtendStoreForCsvImport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
