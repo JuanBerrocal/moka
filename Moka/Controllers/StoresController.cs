@@ -1,10 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper;
+using CsvHelper.Configuration;
+
+
+
 using Moka.Data;
 using Moka.Models;
 using Moka.DTOs;
 using System.Reflection.Emit;
 using System;
+using System.Globalization;
+
 
 namespace Moka.Controllers
 {
@@ -166,7 +173,16 @@ namespace Moka.Controllers
                 return BadRequest("No file was imported.");
             }
 
-            return Ok($"The file ´{file.FileName}´ was imported.");
+            var reader = new StreamReader(file.OpenReadStream());
+            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
+            using var csv = new CsvReader(reader, configuration);
+
+            csv.Read();  // Read the first row.
+            csv.ReadHeader();  // Take the row that has been read as the header.
+            
+            var headers = csv.HeaderRecord;
+
+            return Ok(headers);
         }
 
         [HttpGet("{id}")]
