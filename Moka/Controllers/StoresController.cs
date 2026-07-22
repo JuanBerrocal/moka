@@ -157,6 +157,18 @@ namespace Moka.Controllers
                 result);
         }
 
+        [HttpPost("import")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> ImportStores(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file was imported.");
+            }
+
+            return Ok($"The file ´{file.FileName}´ was imported.");
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<StoreDto>> GetStoreById(int id)
         {
