@@ -8,9 +8,12 @@ using CsvHelper.Configuration;
 using Moka.Data;
 using Moka.Models;
 using Moka.DTOs;
+using Moka.Import;
 using System.Reflection.Emit;
 using System;
 using System.Globalization;
+using static Azure.Core.HttpHeader;
+using System.Net;
 
 
 namespace Moka.Controllers
@@ -168,21 +171,34 @@ namespace Moka.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> ImportStores(IFormFile file)
         {
+                        
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file was imported.");
             }
 
-            var reader = new StreamReader(file.OpenReadStream());
+            using var reader = new StreamReader(file.OpenReadStream());
             var configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
             using var csv = new CsvReader(reader, configuration);
 
-            csv.Read();  // Read the first row.
-            csv.ReadHeader();  // Take the row that has been read as the header.
-            
-            var headers = csv.HeaderRecord;
+            csv.Context.RegisterClassMap<StoreImportRecordMap>(); 
 
-            return Ok(headers);
+            var records = csv.GetRecords<StoreImportRecord>().ToList();
+
+            /*foreach (var record in records) {
+                var store = new Store(Name = record.Name,
+                    SapCode = record.SapCode,
+                    TradeName = record.TradeName,
+                    Address = record.Address,
+                    PostalCode = record.PostalCode,
+                    City = record.City,
+                    TaxId = record.TaxId
+                    );
+
+                _mokaDbContext.Add(store);
+            }*/
+            
+            return Ok(records);
         }
 
         [HttpGet("{id}")]
