@@ -1,4 +1,6 @@
-﻿namespace Moka.Models
+﻿using Moka.Models.Enum;
+
+namespace Moka.Models
 {
     public class Store
     {
@@ -11,6 +13,7 @@
         public string? City { get; set; } = null;
         public string? TaxId { get; set; } = null;
         public string? Notes { get; set; } = null;
+        public StoreSource Source { get; set; } = StoreSource.Manual;
 
     }
 }
