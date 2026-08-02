@@ -1,4 +1,4 @@
-﻿using Moka.Models.Enum;
+﻿using Moka.Models.Enums;
 
 namespace Moka.Models
 {

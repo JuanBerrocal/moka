@@ -7,6 +7,7 @@ using CsvHelper.Configuration;
 
 using Moka.Data;
 using Moka.Models;
+using Moka.Models.Enums;
 using Moka.DTOs;
 using Moka.Import;
 using System.Reflection.Emit;
@@ -14,6 +15,7 @@ using System;
 using System.Globalization;
 using static Azure.Core.HttpHeader;
 using System.Net;
+using Moka.Services;
 
 
 namespace Moka.Controllers
@@ -177,28 +179,11 @@ namespace Moka.Controllers
                 return BadRequest("No file was imported.");
             }
 
-            using var reader = new StreamReader(file.OpenReadStream());
-            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
-            using var csv = new CsvReader(reader, configuration);
+            var importer = new StoreImportService(_mokaDbContext);
 
-            csv.Context.RegisterClassMap<StoreImportRecordMap>(); 
+            var importResult = await importer.ImportAsync(file);
 
-            var records = csv.GetRecords<StoreImportRecord>().ToList();
-
-            /*foreach (var record in records) {
-                var store = new Store(Name = record.Name,
-                    SapCode = record.SapCode,
-                    TradeName = record.TradeName,
-                    Address = record.Address,
-                    PostalCode = record.PostalCode,
-                    City = record.City,
-                    TaxId = record.TaxId
-                    );
-
-                _mokaDbContext.Add(store);
-            }*/
-            
-            return Ok(records);
+            return Ok(importResult);
         }
 
         [HttpGet("{id}")]

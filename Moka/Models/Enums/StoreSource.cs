@@ -1,5 +1,5 @@
 ﻿
-namespace Moka.Models.Enum;
+namespace Moka.Models.Enums;
 
 /// <summary>
 /// It explains how the store was created.
