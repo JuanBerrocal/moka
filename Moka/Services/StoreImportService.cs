@@ -31,61 +31,78 @@ namespace Moka.Services
             var configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
             using var csv = new CsvReader(reader, configuration);
 
-            csv.Context.RegisterClassMap<StoreImportRecordMap>();
-
-            // Get records o import.
-            var records = csv.GetRecords<StoreImportRecord>().ToList();
-
-            var sapStores = await _mokaDbContext.Stores.Where(s => s.Source == StoreSource.Sap).ToDictionaryAsync(s => s.SapCode!);
-
             var result = new StoreImportResult();
-                        
-            for (int i = 0; i < records.Count; i++) {
+            result.FileName = file.FileName;
 
-                var record = records[i];
+            csv.Context.RegisterClassMap<StoreImportRecordMap>();
+            
+            // Get records to import.
+            try
+            {
+                var records = csv.GetRecords<StoreImportRecord>().ToList();
+                var sapStores = await _mokaDbContext.Stores.Where(s => s.Source == StoreSource.Sap).ToDictionaryAsync(s => s.SapCode!);
 
-                if (string.IsNullOrWhiteSpace(record.Name))
+                for (int i = 0; i < records.Count; i++)
                 {
-                    result.Skipped++;
-                    result.Errors.Add($"Line: {i + 2}. Missing store name");
-                }
-                else if (sapStores.TryGetValue(record.SapCode, out var store)) 
-                {
-                    // The client from SAP exists in our database. Only need to update it.
 
-                    store.Name = record.Name;
-                    store.TradeName = record.TradeName;
-                    store.Address = record.Address;
-                    store.PostalCode = record.PostalCode;
-                    store.City = record.City;
-                    store.TaxId = record.TaxId;
+                    var record = records[i];
 
-                    result.Updated++;
-                }
-                else 
-                {
-                    
-                    var newStore = new Store
+                    if (string.IsNullOrWhiteSpace(record.Name))
                     {
-                        Name = record.Name,
-                        SapCode = record.SapCode,
-                        TradeName = record.TradeName,
-                        Address = record.Address,
-                        PostalCode = record.PostalCode,
-                        City = record.City,
-                        TaxId = record.TaxId,
-                        Source = StoreSource.Sap
-                    };
+                        result.Skipped++;
+                        result.Errors.Add($"Line: {i + 2}. Missing store name");
+                    }
+                    else if (string.IsNullOrWhiteSpace(record.SapCode))
+                    {
+                        result.Skipped++;
+                        result.Errors.Add($"Line: {i + 2}. Missing SAP code");
+                    }
+                    else if (sapStores.TryGetValue(record.SapCode, out var store))
+                    {
+                        // The client from SAP exists in our database. Only need to update it.
 
-                    _mokaDbContext.Stores.Add(newStore);
-                    result.Created++;
+                        store.Name = record.Name;
+                        store.TradeName = record.TradeName;
+                        store.Address = record.Address;
+                        store.PostalCode = record.PostalCode;
+                        store.City = record.City;
+                        store.TaxId = record.TaxId;
 
-                    // Add the new Store to our store list.
-                    sapStores.Add(newStore.SapCode, newStore);
+                        result.Updated++;
+                    }
+                    else
+                    {
+
+                        var newStore = new Store
+                        {
+                            Name = record.Name,
+                            SapCode = record.SapCode,
+                            TradeName = record.TradeName,
+                            Address = record.Address,
+                            PostalCode = record.PostalCode,
+                            City = record.City,
+                            TaxId = record.TaxId,
+                            Source = StoreSource.Sap
+                        };
+
+                        _mokaDbContext.Stores.Add(newStore);
+                        result.Created++;
+
+                        // Add the new Store to our store list.
+                        sapStores.Add(newStore.SapCode, newStore);
+                    }
+
                 }
-                
             }
-
+            catch (HeaderValidationException ex)
+            {
+                foreach (var invalidHeader in ex.InvalidHeaders) 
+                {
+                    result.Errors.Add($"Missing header column: {invalidHeader.Names[0]}");
+                }
+                return result;
+            }
+            
             await _mokaDbContext.SaveChangesAsync();
             return result;
         }
