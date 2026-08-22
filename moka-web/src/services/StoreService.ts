@@ -1,4 +1,4 @@
-import {api} from "../api/api";
+import {api} from "@/core/api";
 import type {StoreApiResponse} from "../types/StoreDto";
 
 export async function getStores(page: number, pageSize: number): Promise<StoreApiResponse> {

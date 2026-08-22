@@ -7,6 +7,9 @@
     "types": ["vite/client"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"] // Maps any @/ path directly to the src/ folder
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
