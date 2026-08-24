@@ -6,6 +6,7 @@ export const RouterComponent: React.FC = () => {
     return <BrowserRouter>
         <Routes>
             <Route path="/" element={<HomeScene />} />
+            <Route path="/stores" element={<StoreListScene />} />
         </Routes>
     </BrowserRouter>
 }
