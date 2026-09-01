@@ -1,6 +1,7 @@
-import react from "react";
+
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {HomeScene} from "@/scenes/home";
+import {StoreListScene} from "@/scenes/stores";
 
 export const RouterComponent: React.FC = () => {
     return <BrowserRouter>
