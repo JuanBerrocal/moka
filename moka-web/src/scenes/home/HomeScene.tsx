@@ -7,7 +7,9 @@ const HomeScene: React.FC = () => {
             <h1>Moka</h1>
             <p>Horeca machinery warehouse manager</p>
         </header>
-        
+        <div>
+            <Link to="/stores">Stores</Link>
+        </div>
 
     </main>);
 }
