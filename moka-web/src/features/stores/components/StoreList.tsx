@@ -2,6 +2,7 @@
 import {useState, useEffect} from "react";
 import type {StoreDto} from "./../types/StoreDto";
 import {getStores} from "./../api/storesApi";
+import {StoreListItem} from "./StoreListItem";
 
 export const StoreList: React.FC = () => {
 
@@ -40,14 +41,7 @@ export const StoreList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {stores.map(store => (
-            <tr key={store.id}>
-              <td style={{ textAlign: "left" }}>{store.sapCode}</td>
-              <td style={{ textAlign: "left" }}>{store.name}</td>
-              <td style={{ textAlign: "left" }}>{store.tradeName}</td>
-              <td>{store.city}</td>
-            </tr>
-          ))}
+          {stores.map(store => <StoreListItem key={store.id } store={store} /> )}
         </tbody>
       </table>
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>

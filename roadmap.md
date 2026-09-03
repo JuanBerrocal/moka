@@ -11,10 +11,10 @@
 - [x] Inside core folder, create router folder and router component
 - [x] Scenes folder. Create StoreList scene
 - [x] Pods-Features folder. Create StoreList component.
-- [ ] Add a return button in the StoreListScene
+- [x] Add a return button in the StoreListScene
 
 ## Stores CRUD
-- [ ] StoreListItem component
+- [x] StoreListItem component
 - [ ] Add search components to StoreList scene.
 - [ ] Add filter components to StoreList scene.
 - [ ] Add sorting components to StoreList component

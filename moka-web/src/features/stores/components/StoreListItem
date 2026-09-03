@@ -1,6 +1,0 @@
-
-import React from "react";
-
-export const StoreListItem: React.FC = () => {
-    // To be implemented.
-}
