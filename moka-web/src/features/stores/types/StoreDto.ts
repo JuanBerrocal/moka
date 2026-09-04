@@ -19,3 +19,24 @@ export interface StoreApiResponse {
     items: StoreDto[];
 }
  
+export interface CreateStoreDto{
+    name: string;
+    sapCode?: string;
+    tradeName?: string;
+    address?: string;
+    postalCode?: string;
+    city?: string;
+    taxId?: string;
+    notes?: string;
+}
+ 
+export interface UpdateStoreDto{
+    name: string;
+    sapCode?: string;
+    tradeName?: string;
+    address?: string;
+    postalCode?: string;
+    city?: string;
+    taxId?: string;
+    notes?: string;
+}
