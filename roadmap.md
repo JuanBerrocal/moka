@@ -18,8 +18,8 @@
 - [ ] Add search components to StoreList scene.
 - [ ] Add filter components to StoreList scene.
 - [ ] Add sorting components to StoreList component
-- [ ] Create StoreDetailScene
-- [ ] Create StoreForm (plain React).
+- [x] Create StoreDetailScene
+- [x] Create StoreForm (plain React).
 - [ ] POST a new Store
 - [ ] DELETE a Store
 - [ ] EDIT/PUT a Store
