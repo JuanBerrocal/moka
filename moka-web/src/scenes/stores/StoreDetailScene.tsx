@@ -2,6 +2,7 @@
 
 import {Link} from "react-router-dom";
 import { StoreForm, type StoreFormData } from "@/features/stores";
+import {createStore} from "@/features/stores/api/storesApi";
 
 export const StoreDetailScene = () => {
 
@@ -17,7 +18,12 @@ export const StoreDetailScene = () => {
     };
 
     const onSubmit = (values: StoreFormData) => {
-        console.log("Form submitted with values:", values);
+        try {
+            createStore(values);
+        }
+        catch (error) {
+            console.error("Error creating store:", error);
+        }
     }
 
     return (
