@@ -20,7 +20,7 @@
 - [ ] Add sorting components to StoreList component
 - [x] Create StoreDetailScene
 - [x] Create StoreForm (plain React).
-- [ ] POST a new Store
+- [x] POST a new Store
 - [ ] DELETE a Store
 - [ ] EDIT/PUT a Store
 - [ ] StoreImportScene

@@ -1,11 +1,12 @@
 
 
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { StoreForm, type StoreFormData } from "@/features/stores";
 import {createStore} from "@/features/stores/api/storesApi";
 
 export const StoreDetailScene = () => {
 
+    const navigate = useNavigate();
     const initialValues: StoreFormData = {
         name: "",
         sapCode: "",
@@ -17,9 +18,11 @@ export const StoreDetailScene = () => {
         notes: "",
     };
 
-    const onSubmit = (values: StoreFormData) => {
+    const onSubmit = async (values: StoreFormData) => {
         try {
-            createStore(values);
+            const newStore = await createStore(values);
+            console.log("Store created", newStore);
+            navigate("/stores", {state: {message: "Store created successfully!"}});
         }
         catch (error) {
             console.error("Error creating store:", error);
