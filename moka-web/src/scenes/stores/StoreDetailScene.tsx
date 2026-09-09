@@ -1,11 +1,12 @@
 
-
+import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import { StoreForm, type StoreFormData } from "@/features/stores";
 import {createStore} from "@/features/stores/api/storesApi";
 
 export const StoreDetailScene = () => {
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
     const initialValues: StoreFormData = {
         name: "",
@@ -20,6 +21,7 @@ export const StoreDetailScene = () => {
 
     const onSubmit = async (values: StoreFormData) => {
         try {
+            setIsSubmitting(true);
             const newStore = await createStore(values);
             console.log("Store created", newStore);
             navigate("/stores", {state: {message: "Store created successfully!"}});
@@ -27,13 +29,16 @@ export const StoreDetailScene = () => {
         catch (error) {
             console.error("Error creating store:", error);
         }
+        finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
         <div>
             <h3>Store Detail</h3>
             <Link to="/stores">Back to Stores</Link>
-            <StoreForm initialValues = {initialValues} onSubmit = {onSubmit}/>
+            <StoreForm initialValues = {initialValues} onSubmit = {onSubmit} isSubmitting = {isSubmitting}/>
         </div>
     )
 }

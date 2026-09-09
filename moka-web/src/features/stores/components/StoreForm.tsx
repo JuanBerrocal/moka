@@ -5,9 +5,10 @@ import type {StoreFormData} from "@/features/stores/components/StoreFormData";
 interface StoreFormProps {
     initialValues: StoreFormData;
     onSubmit: (values: StoreFormData) => void;
+    isSubmitting: boolean;
 }
 
-export const StoreForm = ({initialValues, onSubmit,}: StoreFormProps) => {
+export const StoreForm = ({initialValues, onSubmit, isSubmitting}: StoreFormProps) => {
      const [formData, setFormData] = useState<StoreFormData>(initialValues);
 
      const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,7 +57,7 @@ export const StoreForm = ({initialValues, onSubmit,}: StoreFormProps) => {
                 <label htmlFor="taxId">Notes:</label>
                 <textarea id="notes" name="notes" value={formData.notes} onChange = {handleChange} />
             </div>
-            <button type="submit">Save</button>
+            <button type="submit" disabled={isSubmitting}>{(isSubmitting) ? "Saving..." : "Save"} </button>
         </form>
      );
 }
