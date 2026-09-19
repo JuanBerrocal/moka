@@ -9,6 +9,7 @@ export const RouterComponent: React.FC = () => {
             <Route path="/" element={<HomeScene />} />
             <Route path="/stores" element={<StoreListScene />} />
             <Route path="/stores/new" element={<StoreDetailScene />} />
+            <Route path="/stores/:id/edit" element={<StoreDetailScene />} />
         </Routes>
     </BrowserRouter>
 }

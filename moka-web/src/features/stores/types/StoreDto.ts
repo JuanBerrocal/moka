@@ -1,5 +1,5 @@
 
-export interface StoreDto{
+export interface StoreDto {
     id: number;
     name: string;
     sapCode?: string;

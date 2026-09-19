@@ -196,7 +196,7 @@ namespace Moka.Controllers
 
             if (store == null) {
                 _mokaLogger.LogWarning("Store {id} to be deleted not found.", id);
-                return NotFound();
+                return NotFound(new { message = $"Store {id} not found." } );
             }
 
             var result = new StoreDto

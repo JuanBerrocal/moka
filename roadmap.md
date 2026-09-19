@@ -22,8 +22,10 @@
 - [x] Create StoreForm (plain React).
 - [x] POST a new Store
 - [ ] DELETE a Store
-- [ ] EDIT/PUT a Store
+- [x] EDIT/PUT a Store
 - [ ] StoreImportScene
+- [ ] StoreDetaiScene: Review and improve the returned creating/editing component 
+- [ ] StoreDetaiScene: Check all the error messages and situations when saving/reading stores
 
 ## General
 - [ ] Create common folder and navBar component
