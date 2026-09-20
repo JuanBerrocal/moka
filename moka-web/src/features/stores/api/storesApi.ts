@@ -24,3 +24,7 @@ export async function updateStore(id: number, store: StoreFormData): Promise<Sto
     const response = await api.put<StoreDto>(`/stores/${id}`, store);
     return response.data; 
 }
+
+export async function deleteStore(id: number): Promise<void> {
+    await api.delete(`/stores/${id}`);
+}

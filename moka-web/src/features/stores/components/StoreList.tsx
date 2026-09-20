@@ -1,7 +1,7 @@
 
 import {useState, useEffect} from "react";
 import type {StoreDto} from "./../types/StoreDto";
-import {getStores} from "./../api/storesApi";
+import {getStores, deleteStore} from "./../api/storesApi";
 import {StoreListItem} from "./StoreListItem";
 
 export const StoreList: React.FC = () => {
@@ -27,6 +27,16 @@ export const StoreList: React.FC = () => {
       }, [currentPage]);
     
     const totalPages = Math.ceil(totalItems / pageSize);
+
+    const handleDelete = async (id: number) => {
+        try {
+            // Here you would call your API to delete the store
+            await deleteStore(id);
+            setStores((prevStores) => prevStores.filter((store) => store.id !== id));
+        } catch (error) {
+            console.error("Error deleting store:", error);
+        }
+    }
     
     return (
     <div>
@@ -41,7 +51,7 @@ export const StoreList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {stores.map(store => <StoreListItem key={store.id } store={store} /> )}
+          {stores.map(store => <StoreListItem key={store.id } store={store} onDelete={handleDelete}/> )}
         </tbody>
       </table>
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>

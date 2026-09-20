@@ -4,9 +4,10 @@ import type {StoreDto} from "../types/StoreDto";
 
 interface Props {
     store: StoreDto;
+    onDelete: (id: number) => void;
 }
 
-export const StoreListItem = ({store}: Props) => {
+export const StoreListItem = ({store, onDelete}: Props) => {
     
     return (
         <tr>
@@ -15,5 +16,6 @@ export const StoreListItem = ({store}: Props) => {
             <td style={{ textAlign: "left" }}>{store.tradeName}</td>
             <td style={{ textAlign: "left" }}>{store.city}</td>
             <td><Link to={`/stores/${store.id}/edit`}>Edit</Link></td>
+            <td><button onClick={() => onDelete(store.id)}>Delete</button></td>
         </tr>);
 }
