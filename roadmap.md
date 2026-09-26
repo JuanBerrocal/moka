@@ -21,7 +21,7 @@
 - [x] Create StoreDetailScene
 - [x] Create StoreForm (plain React).
 - [x] POST a new Store
-- [ ] DELETE a Store
+- [x] DELETE a Store
 - [x] EDIT/PUT a Store
 - [ ] StoreImportScene
 - [ ] StoreDetaiScene: Review and improve the returned creating/editing component 
@@ -29,3 +29,9 @@
 
 ## General
 - [ ] Create common folder and navBar component
+
+## Machines
+### Machines backend
+- [ ] Define entity
+- [ ] MachineDTO
+- [ ] GET api/machines
