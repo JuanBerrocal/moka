@@ -7,6 +7,7 @@ namespace Moka.Data
     {
 
         public DbSet<Store> Stores => Set<Store>();
+        public DbSet<Machine> Machines => Set<Machine>();
 
         public MokaDbContext(DbContextOptions<MokaDbContext> options) : base(options)
         {
