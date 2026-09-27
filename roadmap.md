@@ -23,6 +23,7 @@
 - [x] POST a new Store
 - [x] DELETE a Store
 - [x] EDIT/PUT a Store
+- [ ] View an Store.
 - [ ] StoreImportScene
 - [ ] StoreDetaiScene: Review and improve the returned creating/editing component 
 - [ ] StoreDetaiScene: Check all the error messages and situations when saving/reading stores
@@ -32,6 +33,6 @@
 
 ## Machines
 ### Machines backend
-- [ ] Define entity
-- [ ] MachineDTO
-- [ ] GET api/machines
+- [x] Define entity
+- [x] MachineDTO
+- [x] GET api/machines

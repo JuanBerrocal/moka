@@ -8,13 +8,13 @@ namespace Moka.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class MachineController : ControllerBase
+    public class MachinesController : ControllerBase
     {
 
         private readonly MokaDbContext _mokaDbContext;
-        private ILogger<MachineController> _mokaLogger;
+        private ILogger<MachinesController> _mokaLogger;
 
-        public MachineController(MokaDbContext mokaDbContext, ILogger<MachineController> logger) { 
+        public MachinesController(MokaDbContext mokaDbContext, ILogger<MachinesController> logger) { 
 
             _mokaDbContext = mokaDbContext;
             _mokaLogger = logger;

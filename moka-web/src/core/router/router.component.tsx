@@ -2,6 +2,7 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {HomeScene} from "@/scenes/home";
 import {StoreListScene, StoreDetailScene} from "@/scenes/stores";
+import {MachineListScene} from "@/scenes/machines";
 
 export const RouterComponent: React.FC = () => {
     return <BrowserRouter>
@@ -10,6 +11,7 @@ export const RouterComponent: React.FC = () => {
             <Route path="/stores" element={<StoreListScene />} />
             <Route path="/stores/new" element={<StoreDetailScene />} />
             <Route path="/stores/:id/edit" element={<StoreDetailScene />} />
+            <Route path="/machines" element={<MachineListScene />} />
         </Routes>
     </BrowserRouter>
 }

@@ -9,6 +9,7 @@ const HomeScene: React.FC = () => {
         </header>
         <div>
             <Link to="/stores">Stores</Link>
+            <Link to="/machines">Machines</Link>
         </div>
 
     </main>);
