@@ -6,15 +6,15 @@ namespace Moka.DTOs
     {
         public int Id { get; set; }
         public string Model { get; set; } = string.Empty;
-        public string Serial { get; set; } = string.Empty;
+        public string? Serial { get; set; }
         public string? SapCode { get; set; } = null;
-        public string Asset { get; set; } = string.Empty;
+        public string? Asset { get; set; }
         public MachineType Type { get; set; } = MachineType.Unknown;
         public DateOnly? PurchaseDate { get; set; }
         public MachineState State { get; set; } = MachineState.Unknown;
         public int StoreId { get; set; }
-        public string Assignment { get; set; } = string.Empty;
+        public string? Assignment { get; set; }
         public bool IsExternal { get; set; }
-        public string? Notes { get; set; } = null;
+        public string? Notes { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 
 import {Link, useLocation} from "react-router-dom";
+
 import {StoreList} from "@/features/stores/components/StoreList";
 
 const StoreListScene: React.FC = () => {

@@ -32,7 +32,28 @@
 - [ ] Create common folder and navBar component
 
 ## Machines
-### Machines backend
+### Machines backend and list.
 - [x] Define entity
 - [x] MachineDTO
 - [x] GET api/machines
+### Show machines detail
+- [ ] GET api/machines/id
+- [ ] Build MachineDetailScene
+- [ ] Build MachineForm.
+- [ ] Link route. Show Machines Detail
+### Edit MAchines
+- [ ] PUT api/machines/id
+- [ ] MachineForm to update.  Save button.
+- [ ] Link route.
+### Create MAchines
+- [x] POST api/machines
+- [ ] Adapt MachineForm to create. Save new form.
+- [ ] Link route.
+### Delete machines.
+- [ ] DELETE api/machines/id
+- [ ] Delete function
+- [ ] Add delete button
+### Improve machine list
+- [ ] Add filtering.
+- [ ] Add sorting.
+### Import machines from SAP
