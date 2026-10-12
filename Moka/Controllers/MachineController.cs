@@ -119,5 +119,36 @@ namespace Moka.Controllers
             return CreatedAtAction(nameof(GetMachineById), new { id = newMachine.Id}, result);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateMachine(int id, UpdateMachineDto updatedMachine)
+        {
+            _mokaLogger.LogWarning("Updating machine {id}", id);
+
+            var machine = await _mokaDbContext.Machines.FindAsync(id);
+
+            if (machine == null)
+            {
+                _mokaLogger.LogWarning("Machine {id} to be updated not found.", id);
+                return NotFound();
+            }
+
+            machine.Model = updatedMachine.Model.Trim().ToUpper();
+            machine.Serial = updatedMachine.Serial;
+            machine.SapCode = updatedMachine.SapCode?.Trim().ToUpper();
+            machine.Asset = updatedMachine.Asset?.Trim().ToUpper();
+            machine.Type = updatedMachine.Type;
+            machine.PurchaseDate = updatedMachine.PurchaseDate;
+            machine.State = updatedMachine.State;
+            machine.StoreId = updatedMachine.StoreId;
+            machine.Assignment = updatedMachine.Assignment?.Trim().ToUpper();
+            machine.IsExternal = updatedMachine.IsExternal;
+            machine.Notes = updatedMachine.Notes?.Trim();
+
+            _mokaDbContext.Update(machine);
+
+            await _mokaDbContext.SaveChangesAsync();
+            _mokaLogger.LogInformation("Machine {Id} updated", id);
+            return NoContent();
+        }
     }
 }

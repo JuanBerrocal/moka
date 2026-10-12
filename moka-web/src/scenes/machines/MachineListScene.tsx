@@ -8,7 +8,8 @@ const MachineListScene: React.FC = () => {
 
     return (<div>
       <Link to="/">Home</Link>
-      <p >New</p>
+      <Link to="/machines/new">New</Link>
+      
       <h3>Machines</h3>
       <div>{message && (<p>{message}</p>)}</div>
       <MachineList />

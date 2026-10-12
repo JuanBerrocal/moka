@@ -1,6 +1,6 @@
 
 import {useState, useEffect} from "react";
-import type {MachineDto} from "../types/MachineDto";
+import type {MachineDto} from "../types/machineDtos";
 import {getMachines} from "./../api/machinesApi";
 import {MachineListItem} from "./MachineListItem";
 

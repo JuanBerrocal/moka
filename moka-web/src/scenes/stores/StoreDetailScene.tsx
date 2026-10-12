@@ -45,7 +45,17 @@ export const StoreDetailScene = () => {
                 if (isEditMode && id) {
                     await loadStore(Number(id)).then((store) => {
                         if (store) {
-                            setStore({...store});
+                            const storeFormData: StoreFormData = {
+                                name: store.name,
+                                sapCode: store.sapCode || "",
+                                tradeName: store.tradeName || "",
+                                address: store.address || "",
+                                postalCode: store.postalCode || "",
+                                city: store.city || "",
+                                taxId: store.taxId || "",
+                                notes: store.notes || "",
+                            };
+                            setStore({...storeFormData});
                         }
                     });
                 }
@@ -77,6 +87,7 @@ export const StoreDetailScene = () => {
                 console.error("Axios error:", error.response?.data);
                 setError(error.response?.data?.message || "An error occurred while saving the store.");
             }
+            
         }
         finally {
             setIsSubmitting(false);

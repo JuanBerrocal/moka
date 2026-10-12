@@ -6,7 +6,7 @@ export interface MachineFormData {
     machineType: number;
     purchaseDate: string | null;
     state: number;
-    storeId: number | null;
+    storeId: number;
     assignment: string;
     isExternal: boolean;
     notes: string | null;

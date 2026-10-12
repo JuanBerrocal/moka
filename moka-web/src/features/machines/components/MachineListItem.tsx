@@ -1,5 +1,5 @@
-//import {Link} from "react-router-dom";
-import type {MachineDto} from "../types/MachineDto";
+import {Link} from "react-router-dom";
+import type {MachineDto} from "../types/machineDtos";
 
 interface Props {
     machine: MachineDto;
@@ -14,6 +14,7 @@ export const MachineListItem = ({machine}: Props) => {
             <td style={{ textAlign: "left" }}>{machine.serial}</td>
             <td style={{ textAlign: "left" }}>{machine.asset}</td>
             <td style={{ textAlign: "left" }}>{machine.state}</td>
-            
+            <td style={{ textAlign: "left" }}>{machine.machineType}</td>
+            <td><Link to={`/machines/${machine.id}/edit`}>Edit</Link></td>
         </tr>);
 }
