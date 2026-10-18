@@ -30,7 +30,6 @@ export const StoreList: React.FC = () => {
 
     const handleDelete = async (id: number) => {
         try {
-            // Here you would call your API to delete the store
             await deleteStore(id);
             setStores((prevStores) => prevStores.filter((store) => store.id !== id));
         } catch (error) {

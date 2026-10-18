@@ -5,6 +5,7 @@ using Moka.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using Moka.Models.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace Moka.Controllers
 {
@@ -55,7 +56,7 @@ namespace Moka.Controllers
 
             if (machine == null)
             {
-                _mokaLogger.LogInformation("Looking for machine {id}", id);
+                _mokaLogger.LogInformation("Machine {id} not found.", id);
                 return NotFound(new { message = "Machine not found." });
             }
 
@@ -148,6 +149,29 @@ namespace Moka.Controllers
 
             await _mokaDbContext.SaveChangesAsync();
             _mokaLogger.LogInformation("Machine {Id} updated", id);
+            return NoContent();
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMachine(int id)
+        {
+            _mokaLogger.LogInformation("Deleting the machine {id}", id);
+
+            var machine = await _mokaDbContext.Machines.FindAsync(id);
+
+            if (machine == null)
+            {
+                _mokaLogger.LogWarning("Deleting the machine {id}", id);
+                return NotFound();
+            }
+
+            _mokaDbContext.Machines.Remove(machine);
+
+            await _mokaDbContext.SaveChangesAsync();
+
+            _mokaLogger.LogInformation("Machine {Id} deleted", id);
+
             return NoContent();
         }
     }

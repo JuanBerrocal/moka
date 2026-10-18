@@ -1,7 +1,7 @@
 
 import {useState, useEffect} from "react";
 import type {MachineDto} from "../types/machineDtos";
-import {getMachines} from "./../api/machinesApi";
+import {getMachines, deleteMachine} from "./../api/machinesApi";
 import {MachineListItem} from "./MachineListItem";
 
 export const MachineList: React.FC = () => {
@@ -35,17 +35,14 @@ export const MachineList: React.FC = () => {
     
     // const totalPages = Math.ceil(totalItems / pageSize);
 
-    /* To be implemented later for delete functionality
     const handleDelete = async (id: number) => {
         try {
-            // Here you would call your API to delete the store
-            await deleteStore(id);
-            setStores((prevStores) => prevStores.filter((store) => store.id !== id));
+            await deleteMachine(id);
+            setMachines((prevMachines) => prevMachines.filter((machine) => machine.id !== id));
         } catch (error) {
-            console.error("Error deleting store:", error);
+            console.error("Error deleting machine:", error);
         }
     }
-    */
 
     return (
     <div>
@@ -61,7 +58,7 @@ export const MachineList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {machines.map(machine => <MachineListItem key={machine.id } machine={machine} /> )}
+          {machines.map(machine => <MachineListItem key={machine.id } machine={machine} onDelete={handleDelete}/> )}
         </tbody>
       </table>
        </div>

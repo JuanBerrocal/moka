@@ -4,7 +4,7 @@ export interface MachineDto {
     serial: string;
     sapCode: string | null;
     asset: string;
-    machineType: number;
+    type: number;
     purchaseDate: string | null;
     state: number;
     storeId: number;
@@ -18,7 +18,7 @@ export interface RequestMachineDto {
     serial: string | null;
     sapCode: string | null;
     asset: string | null;
-    machineType: number;
+    type: number;
     purchaseDate: string | null;
     state: number;
     storeId: number;

@@ -12,9 +12,9 @@ import {toRequestMachineDto} from "@/features/machines/mappers/machineMappers";
 
 export const MachineDetailScene = () => {
 
-    const [machine, setMachine] = useState<MachineDto | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [machineST, setMachineST] = useState<MachineDto | null>(null);
+    const [errorST, setErrorST] = useState<string | null>(null);
+    const [isSubmittingST, setIsSubmittingST] = useState(false);
 
 
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const MachineDetailScene = () => {
         serial: "",
         sapCode: null,
         asset: "",
-        machineType: 0,
+        type: 0,
         purchaseDate: null,
         state: 0,
         storeId: 0,
@@ -42,7 +42,7 @@ export const MachineDetailScene = () => {
         }
         catch (error) {
             console.error("Error loading machine: ", error);
-            setError("Error loading the machine");
+            setErrorST("Error loading the machine");
             return null;
         }
     }
@@ -52,7 +52,7 @@ export const MachineDetailScene = () => {
             if (isEditting && id) {
                 await loadMachine(Number(id)).then((machine) => {
                     if (machine) {
-                        setMachine({...machine});
+                        setMachineST({...machine});
                     }
                 });
             }
@@ -62,8 +62,8 @@ export const MachineDetailScene = () => {
 
     const onSubmit = async (values: MachineFormData) => {
         try {
-                setIsSubmitting(true);
-                setError(null);
+                setIsSubmittingST(true);
+                setErrorST(null);
                 if (isEditting) {
                     // Update machine logic here
                     const updatedMachine = await updateMachine(Number(id), toRequestMachineDto(values));
@@ -79,27 +79,24 @@ export const MachineDetailScene = () => {
         catch (error) {
             if (error instanceof Error) {
                 console.error("Error of input value. " + error.message);
-                setError("Error of input value. " + error.message);
+                setErrorST("Error of input value. " + error.message);
             }
             else if (axios.isAxiosError(error)) {
                 console.error("Error submitting machine. Axios error:", error.response?.data);
-                setError(error.response?.data?.message || "An error occurred while saving the store.");
+                setErrorST(error.response?.data?.message || "An error occurred while saving the store.");
             }
         }
         finally {
-            setIsSubmitting(false);
+            setIsSubmittingST(false);
         }
     }
 
     const buildBody = () => {
-        if (error) {
-            return <div>Error: {error}</div>;
-        }
-        if (!machine) {
+        if (!machineST) {
             return <div>Machine loading...</div>;
         }
         
-        return (<MachineForm initialValues = {machine} onSubmit = {onSubmit} isSubmitting = {isSubmitting}/>);
+        return (<MachineForm initialValues = {machineST} onSubmit = {onSubmit} isSubmitting = {isSubmittingST}/>);
     }
 
     if (!isEditting) {
@@ -108,8 +105,8 @@ export const MachineDetailScene = () => {
             <>
             <div>Creating machine</div>
             <Link to ="/machines">Back to machines</Link>
-            { error &&  <div>{error}</div> }
-            <MachineForm initialValues = {emptyMachineValues} onSubmit = {onSubmit} isSubmitting = {isSubmitting}/>
+            { errorST &&  <div className="error-message">{errorST}</div> }
+            <MachineForm initialValues = {emptyMachineValues} onSubmit = {onSubmit} isSubmitting = {isSubmittingST}/>
             </>
         );
     }
@@ -118,7 +115,7 @@ export const MachineDetailScene = () => {
     <>
         <div>Machine Detail</div>
         <Link to="/machines">Back to machines</Link>
-        { error &&  <div>{error}</div> }
+        { errorST &&  <div className="error-message">{errorST}</div> }
         {buildBody()}
     </>);
 }

@@ -99,7 +99,7 @@ export const StoreDetailScene = () => {
         <div>
             <h3>Creating New Store</h3>
             <Link to="/stores">Back to Stores</Link>
-            { error &&  <div>{error}</div> }
+            { error &&  <div className="error-message">{error}</div> }
             <StoreForm initialValues = {emptyStoreValues} onSubmit = {onSubmit} isSubmitting = {isSubmitting}/>
         </div>
         )
@@ -107,7 +107,7 @@ export const StoreDetailScene = () => {
 
     const buildBody = () => {
         if (error) {
-            return (<><div>{error}</div> </>);
+            return (<><div className="error-message">{error}</div> </>);
         }
         else if (!store) {
             return (<div>Loading store...</div>);

@@ -3,7 +3,7 @@ export interface MachineFormData {
     serial: string;
     sapCode: string | null;
     asset: string;
-    machineType: number;
+    type: number;
     purchaseDate: string | null;
     state: number;
     storeId: number;

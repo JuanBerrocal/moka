@@ -11,7 +11,7 @@ export const MachineType = {
     Dispenser: 8,
     Cabinet: 9,
     Office: 10,
-    Others: 99
+    Others: 99,
 } as const;
 
 export const MachineState = {

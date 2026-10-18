@@ -24,3 +24,7 @@ export async function updateMachine(id: number, machine: RequestMachineDto): Pro
     const response = await api.put<MachineDto>(`/machines/${id}`, machine);
     return response.data; 
 }
+
+export async function deleteMachine(id: number): Promise<void> {
+    await api.delete(`/machines/${id}`);
+}

@@ -37,22 +37,24 @@
 - [x] MachineDTO
 - [x] GET api/machines
 ### Show machines detail
-- [ ] GET api/machines/id
-- [ ] Build MachineDetailScene
-- [ ] Build MachineForm.
-- [ ] Link route. Show Machines Detail
+- [x] GET api/machines/id
+- [x] Build MachineDetailScene
+- [x] Build MachineForm.
+- [x] Link route. Show Machines Detail
 ### Edit MAchines
-- [ ] PUT api/machines/id
-- [ ] MachineForm to update.  Save button.
-- [ ] Link route.
+- [x] PUT api/machines/id
+- [x] MachineForm to update.  Save button.
+- [x] Link route.
+- [x] Field machine__type doesnt get the value read from the database in the form combo. Resolve it.
+- [x] Error message in the MachineForm gives the description of the error (f.ex.value cant be null but doesnt inform about what column needs review).
 ### Create MAchines
 - [x] POST api/machines
-- [ ] Adapt MachineForm to create. Save new form.
-- [ ] Link route.
+- [x] Adapt MachineForm to create. Save new form.
+- [x] Link route.
 ### Delete machines.
-- [ ] DELETE api/machines/id
-- [ ] Delete function
-- [ ] Add delete button
+- [x] DELETE api/machines/id
+- [x] Delete function
+- [x] Add delete button
 ### Improve machine list
 - [ ] Add filtering.
 - [ ] Add sorting.

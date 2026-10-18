@@ -43,8 +43,8 @@ export const MachineForm = ({initialValues, onSubmit, isSubmitting} : MachineFor
                 <input id="asset" name="asset" value={formData.asset} onChange={handleChange} />
             </div>
             <div>
-                <label htmlFor="machineType">Machine Type:</label>
-                <select id="machineType" name="machineType" value={formData.machineType} onChange={handleChange} required >
+                <label htmlFor="type">Machine Type:</label>
+                <select id="type" name="type" value={formData.type} onChange={handleChange} required >
                     <option value={MachineType.Unknown}>Unknown</option>
                     <option value={MachineType.Machine}>Machine</option>
                     <option value={MachineType.Grinder}>Grinder</option>
