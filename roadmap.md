@@ -55,6 +55,11 @@
 - [x] DELETE api/machines/id
 - [x] Delete function
 - [x] Add delete button
+### Relationships: Transactions, Stores and Machines
+- [ ] Define Entity Transaction
+- [ ] Add foreign keys to Transaction
+- [ ] Add Navigation properties to Transaction
+- [ ] Configure relationships in OnModelCreating
 ### Improve machine list
 - [ ] Add filtering.
 - [ ] Add sorting.
