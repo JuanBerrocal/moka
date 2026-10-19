@@ -111,6 +111,79 @@ namespace Moka.Migrations
 
                     b.ToTable("Stores");
                 });
+
+            modelBuilder.Entity("Moka.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("DestinationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DocumentNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MachineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MovementType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OriginId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Process")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Temporary")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinationId");
+
+                    b.HasIndex("MachineId");
+
+                    b.HasIndex("OriginId");
+
+                    b.ToTable("Transaction");
+                });
+
+            modelBuilder.Entity("Moka.Models.Transaction", b =>
+                {
+                    b.HasOne("Moka.Models.Store", "Destination")
+                        .WithMany()
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Moka.Models.Machine", "Machine")
+                        .WithMany()
+                        .HasForeignKey("MachineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Moka.Models.Store", "Origin")
+                        .WithMany()
+                        .HasForeignKey("OriginId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Destination");
+
+                    b.Navigation("Machine");
+
+                    b.Navigation("Origin");
+                });
 #pragma warning restore 612, 618
         }
     }
