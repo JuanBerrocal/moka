@@ -61,6 +61,10 @@
 - [x] Add Navigation properties to Transaction
 - [x] Configure relationships in OnModelCreating
 - [x] Migration to database
+### Transactions and transaction lines
+- [ ] Define transaction Entity and TransactionLine entity
+- [ ] Define relationships between Transaction and TransactionLine
+- [ ] Endpoint to create one transaction and its transaction lines in one request.
 ### Improve machine list
 - [ ] Add filtering.
 - [ ] Add sorting.

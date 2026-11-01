@@ -21,10 +21,10 @@ namespace Moka.Data
 
             modelBuilder.Entity<Store>().HasIndex(s => s.SapCode);
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.Machine)
+            modelBuilder.Entity<Machine>()
+                .HasOne(t => t.Store)
                 .WithMany()
-                .HasForeignKey(t => t.MachineId)
+                .HasForeignKey(t => t.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
@@ -39,6 +39,14 @@ namespace Moka.Data
                 .HasForeignKey(t => t.DestinationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<TransactionLine>()
+                .HasOne(tl => tl.Transaction)
+                .WithMany(t => t.TransactionLines)
+                .HasForeignKey(tl => tl.TransactionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TransactionLine>()
+                .HasKey(tl => new { tl.TransactionId, tl.LineId });
         }
     }
 }

@@ -5,8 +5,6 @@ namespace Moka.Models
     public class Transaction
     {
         public int Id { get; set; }
-        public int MachineId { get; set; }
-        public Machine Machine { get; set; } = null!;
         public int OriginId { get; set; }
         public Store Origin { get; set; } = null!;
         public int DestinationId { get; set; }
@@ -17,5 +15,6 @@ namespace Moka.Models
         public string? DocumentNumber { get; set; }
         public string? Notes { get; set; }
         public bool Temporary { get; set; }
+        public ICollection<TransactionLine> TransactionLines { get; set; } = new List<TransactionLine>();   
     }
 }

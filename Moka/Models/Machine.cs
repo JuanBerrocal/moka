@@ -14,6 +14,7 @@ namespace Moka.Models
         public DateOnly? PurchaseDate { get; set; }
         public MachineState State { get; set; } = MachineState.Unknown;
         public int StoreId { get; set; }
+        public Store Store { get; set; } = null!; 
         public string? Assignment { get; set; }
         public bool IsExternal { get; set; }
         public string? Notes { get; set; } = null;
