@@ -15,6 +15,6 @@ namespace Moka.Models
         public string? DocumentNumber { get; set; }
         public string? Notes { get; set; }
         public bool Temporary { get; set; }
-        public ICollection<TransactionLine> TransactionLines { get; set; } = new List<TransactionLine>();   
+        public List<TransactionLine> TransactionLines { get; set; } = new List<TransactionLine>();   
     }
 }

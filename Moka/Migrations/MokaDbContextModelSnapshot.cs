@@ -66,6 +66,8 @@ namespace Moka.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StoreId");
+
                     b.ToTable("Machines");
                 });
 
@@ -129,9 +131,6 @@ namespace Moka.Migrations
                     b.Property<string>("DocumentNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MachineId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MovementType")
                         .HasColumnType("int");
 
@@ -151,11 +150,41 @@ namespace Moka.Migrations
 
                     b.HasIndex("DestinationId");
 
-                    b.HasIndex("MachineId");
-
                     b.HasIndex("OriginId");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("Moka.Models.TransactionLine", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MachineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TransactionId", "LineId");
+
+                    b.HasIndex("MachineId");
+
+                    b.ToTable("TransactionLines");
+                });
+
+            modelBuilder.Entity("Moka.Models.Machine", b =>
+                {
+                    b.HasOne("Moka.Models.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("Moka.Models.Transaction", b =>
@@ -163,12 +192,6 @@ namespace Moka.Migrations
                     b.HasOne("Moka.Models.Store", "Destination")
                         .WithMany()
                         .HasForeignKey("DestinationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Moka.Models.Machine", "Machine")
-                        .WithMany()
-                        .HasForeignKey("MachineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -180,9 +203,31 @@ namespace Moka.Migrations
 
                     b.Navigation("Destination");
 
+                    b.Navigation("Origin");
+                });
+
+            modelBuilder.Entity("Moka.Models.TransactionLine", b =>
+                {
+                    b.HasOne("Moka.Models.Machine", "Machine")
+                        .WithMany()
+                        .HasForeignKey("MachineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Moka.Models.Transaction", "Transaction")
+                        .WithMany("TransactionLines")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Machine");
 
-                    b.Navigation("Origin");
+                    b.Navigation("Transaction");
+                });
+
+            modelBuilder.Entity("Moka.Models.Transaction", b =>
+                {
+                    b.Navigation("TransactionLines");
                 });
 #pragma warning restore 612, 618
         }

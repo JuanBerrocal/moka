@@ -79,12 +79,11 @@ namespace Moka.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MachineDto>> CreateMachine(MachineDto machine) {
+        public async Task<ActionResult<MachineDto>> CreateMachine(CreateMachineDto machine) {
 
             _mokaLogger.LogInformation("Creating a new machine.");
 
             var newMachine = new Machine {
-                Id = machine.Id, 
                 Model = machine.Model.Trim().ToUpper(),
                 Serial = machine.Serial?.Trim().ToUpper(),
                 SapCode = machine.SapCode?.Trim().ToUpper(),

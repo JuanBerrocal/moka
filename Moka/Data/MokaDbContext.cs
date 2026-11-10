@@ -9,6 +9,7 @@ namespace Moka.Data
         public DbSet<Store> Stores => Set<Store>();
         public DbSet<Machine> Machines => Set<Machine>();
         public DbSet<Transaction> Transactions => Set<Transaction>();
+        public DbSet<TransactionLine> TransactionLines => Set<TransactionLine>();
 
         public MokaDbContext(DbContextOptions<MokaDbContext> options) : base(options)
         {
@@ -24,7 +25,7 @@ namespace Moka.Data
             modelBuilder.Entity<Machine>()
                 .HasOne(t => t.Store)
                 .WithMany()
-                .HasForeignKey(t => t.Id)
+                .HasForeignKey(t => t.StoreId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
@@ -44,6 +45,12 @@ namespace Moka.Data
                 .WithMany(t => t.TransactionLines)
                 .HasForeignKey(tl => tl.TransactionId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TransactionLine>()
+                .HasOne(tl => tl.Machine)
+                .WithMany()
+                .HasForeignKey(tl => tl.MachineId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TransactionLine>()
                 .HasKey(tl => new { tl.TransactionId, tl.LineId });
