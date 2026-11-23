@@ -1,27 +1,23 @@
-﻿using Moka.Models;
-using Moka.Models.Enums;
+﻿using Moka.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Moka.DTOs
 {
     public class CreateTransactionDto
     {
-        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "OriginId must be a positive integer.")]
         public int OriginId { get; set; }
-        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "DestinationId must be a positive integer.")]
         public int DestinationId { get; set; }
         [Required]
         public DateOnly Date { get; set; }
-        [Required]
+        [EnumDataType(typeof(MovementType))]
         public MovementType MovementType { get; set; }
         [StringLength(40)]
         public string? Process { get; set; }
         [StringLength(20)]
         public string? DocumentNumber { get; set; }
         public string? Notes { get; set; }
-        [Required]
         public bool Temporary { get; set; }
         [MinLength(1, ErrorMessage = "A transaction must contain at least one line.")]
         [Required]

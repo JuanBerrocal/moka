@@ -2,6 +2,7 @@
 using Moka.Models;
 using Moka.Data;
 using Moka.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moka.Controllers
 {
@@ -24,9 +25,28 @@ namespace Moka.Controllers
 
             _mokaLogger.LogInformation("Creating a new transaction.");
 
+            // Validations.
             if (transactionDto == null)
             {
                 return BadRequest("Transaction data is required.");
+            }
+
+            var originExists = await _mokaDbContext.Stores.AnyAsync(s => s.Id == transactionDto.OriginId);
+            var destinationExists = await _mokaDbContext.Stores.AnyAsync(s => s.Id == transactionDto.DestinationId);
+
+            if (!originExists)
+            {
+                return BadRequest("Origin store does not exist.");
+            }
+
+            if (!destinationExists)
+            {
+                return BadRequest("Destination store does not exist.");
+            }
+
+            if (transactionDto.OriginId == transactionDto.DestinationId)
+            {
+                return BadRequest("Origin and destination stores can't be the same.");
             }
 
             var transaction = new Transaction
@@ -57,7 +77,7 @@ namespace Moka.Controllers
             catch (Exception ex)
             {
                 _mokaLogger.LogError(ex, "Error creating transaction.");
-                return StatusCode(500, "An error occurred while creating the transaction.");
+                return StatusCode(500, "An error occurred while creating the transaction: " + ex.Message);
             }
         }
     }

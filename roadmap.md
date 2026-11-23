@@ -56,6 +56,8 @@
 - [x] DELETE api/machines/id
 - [x] Delete function
 - [x] Add delete button
+
+## Transactions
 ### Relationships: Transactions, Stores and Machines
 - [x] Define Entity Transaction
 - [x] Add foreign keys to Transaction
@@ -70,49 +72,50 @@
 
 #### 1. Transaction header validations
 
-- [ ] Request body must not be null.
+- [x] Request body must not be null.
 - [x] `OriginId` must be a positive integer.
 - [x] `DestinationId` must be a positive integer.
-- [ ] Origin store must exist in the database.
-- [ ] Destination store must exist in the database.
-- [ ] Origin and destination must be different stores (if required by the movement type).
-- [ ] `Date` must be a valid business date.
-- [ ] Decide whether future transaction dates are allowed.
-- [ ] `MovementType` must be a defined enum value.
-- [ ] `MovementType` must not be `Unknown`.
-- [ ] `Process` must not exceed 40 characters.
-- [ ] `DocumentNumber` must not exceed 20 characters.
+- [x] Origin store must exist in the database.
+- [x] Destination store must exist in the database.
+- [x] Origin and destination must be different stores (if required by the movement type).
+- [x] `Date` must be a valid business date.
+- [x] Decide whether future transaction dates are allowed.
+- [x] `MovementType` must be a defined enum value.
+- [x] `MovementType` must not be `Unknown`.
+- [x] `Process` must not exceed 40 characters.
+- [x] `DocumentNumber` must not exceed 20 characters.
 - [ ] `Notes` must respect any length limit defined by the business.
 - [ ] `Temporary` must be a valid boolean value.
 
 #### 2. Transaction lines validations
 
-- [ ] `TransactionLines` must not be null.
-- [ ] Transaction must contain at least one line.
+- [x] `TransactionLines` must not be null.
+- [x] Transaction must contain at least one line.
 - [x] Every `MachineId` must be a positive integer.
-- [ ] Every referenced machine must exist in the database.
-- [ ] A machine cannot appear more than once in the same transaction.
+- [x] Every referenced machine must exist in the database.
+- [x] A machine cannot appear more than once in the same transaction.
 - [ ] Each line's `Notes` must respect any length limit defined by the business.
-- [ ] `LineId` must be assigned by the backend.
-- [ ] `LineId` values must be unique within the transaction.
+- [x] `LineId` must be assigned by the backend.
+- [x] `LineId` values must be unique within the transaction.
 
 #### 3. Machine location validations
 
-- [ ] Check the machine's currently recorded `StoreId`.
-- [ ] Compare it with the transaction's declared `OriginId`.
-- [ ] If they differ, show a warning to the user.
-- [ ] Do not block the transaction because of this discrepancy.
+- [x] Check the machine's currently recorded `StoreId`.
+- [x] Compare it with the transaction's declared `OriginId`.
+- [x] If they differ, create a warning for the user.
+- [ ] Show the warning to the user.
+- [x] Do not block the transaction because of this discrepancy.
 - [ ] Every employee is currently allowed to proceed.
 - [ ] Consider superuser authorization for this discrepancy in a future version.
 
 #### 4. Transaction creation
 
-- [ ] Map the DTO header properties to a new `Transaction`.
-- [ ] Map each DTO line to a new `TransactionLine`.
-- [ ] Assign sequential `LineId` values, starting at 1.
-- [ ] Associate each line with its `MachineId`.
-- [ ] Associate all lines with the new transaction.
-- [ ] Normalize `Process` and `DocumentNumber` using `ToUpperInvariant()` if required.
+- [x] Map the DTO header properties to a new `Transaction`.
+- [x] Map each DTO line to a new `TransactionLine`.
+- [x] Assign sequential `LineId` values, starting at 1.
+- [x] Associate each line with its `MachineId`.
+- [x] Associate all lines with the new transaction.
+- [x] Normalize `Process` and `DocumentNumber` using `ToUpperInvariant()` if required.
 
 #### 5. Update machine locations
 
@@ -155,3 +158,100 @@
 - [ ] Add filtering.
 - [ ] Add sorting.
 ### Import machines from SAP
+
+
+1. Backend — ASP.NET Core
+Architecture and configuration
+- [ ] MUST — Review and clean the project structure.
+- [ ] MUST — Use dependency injection correctly.
+- [ ] MUST — Configure Entity Framework Core and MokaDbContext.
+- [ ] MUST — Configure SQL Server connection through configuration files/environment variables.
+- [ ] MUST — Ensure development and production configurations are separated.
+- [ ] MUST — Configure proper error handling and HTTP status codes.
+- [ ] MUST — Configure logging.
+- [ ] — Add Swagger/OpenAPI documentation.
+- [ ] — Remove unused code, dependencies and debugging artefacts.
+Database and Entity Framework
+- [ ] MUST — Review all entities and their properties.
+- [ ] MUST — Verify primary keys and foreign keys.
+- [ ] MUST — Verify entity relationships and navigation properties.
+- [ ] MUST — Configure entity constraints and validation.
+- [ ] MUST — Create and verify database migrations.
+- [ ] MUST — Ensure the database can be created from a clean environment.
+- [ ] — Add seed data for demonstration purposes.
+API and business logic
+- [ ] MUST — Complete CRUD operations for the main entities.
+- [ ] MUST — Verify all API endpoints and routes.
+- [ ] MUST — Implement input validation.
+- [ ] MUST — Handle missing resources and invalid requests.
+- [ ] MUST — Implement correct relationship handling.
+- [ ] MUST — Prevent accidental deletion of related records.
+- [ ] — Implement pagination where appropriate.
+- [ ] — Implement filtering and sorting.
+- [ ] — Implement business rules and prevent invalid operations.
+- [ ] — Review naming conventions and consistency.
+Authentication and security
+- [ ] MUST — Implement JWT authentication.
+- [ ] MUST — Verify login functionality.
+- [ ] MUST — Protect private API endpoints.
+- [ ] MUST — Validate tokens correctly.
+- [ ] MUST — Hash passwords securely.
+- [ ] MUST — Keep secrets out of Git and source code.
+- [ ] — Implement role-based authorisation if roles are part of Moka's scope.
+- [ ] — Review CORS configuration.
+2. Frontend — React
+Structure and architecture
+- [ ] MUST — Review component organisation.
+- [ ] MUST — Separate API communication from presentation components.
+- [ ] MUST — Centralise API configuration.
+- [ ] MUST — Implement consistent state management.
+- [ ] MUST — Remove unused components and dependencies.
+Functionality
+- [ ] MUST — Implement login and logout.
+- [ ] MUST — Connect all essential screens to the backend.
+- [ ] MUST — Complete the main CRUD workflows.
+- [ ] MUST — Display related entities correctly.
+- [ ] MUST — Implement forms with validation.
+- [ ] MUST — Display useful error messages.
+- [ ] MUST — Handle loading and empty states.
+- [ ] MUST — Handle expired or invalid authentication tokens.
+- [ ] — Add search, filtering and pagination if supported by the backend.
+User experience
+- [ ] MUST — Provide consistent navigation.
+- [ ] MUST — Ensure the main screens are visually consistent.
+- [ ] MUST — Make the application usable on desktop.
+- [ ] — Improve mobile responsiveness.
+- [ ] — Add confirmation dialogs for destructive operations.
+- [ ] — Improve accessibility and keyboard navigation.
+3. Testing and quality
+- [ ] MUST — Test the main backend services and business logic.
+- [ ] MUST — Test important API endpoints.
+- [ ] MUST — Test authentication and authorisation.
+- [ ] MUST — Test database relationships.
+- [ ] MUST — Test the main frontend workflows manually.
+- [ ] MUST — Test invalid input and error scenarios.
+- [ ] MUST — Test the application from a clean installation.
+- [ ] — Add automated frontend tests.
+- [ ] — Add integration tests for critical workflows.
+4. Deployment and demonstration
+- [ ] MUST — Prepare a clean repository on GitHub.
+- [ ] MUST — Write a professional README.
+- [ ] MUST — Explain the architecture and technology stack.
+- [ ] MUST — Include database setup instructions.
+- [ ] MUST — Include instructions for running the backend and frontend.
+- [ ] MUST — Provide demonstration data or a reproducible setup.
+- [ ] MUST — Ensure the application starts and works on another machine or clean environment.
+- [ ] MUST — Include screenshots of the main screens.
+- [ ] MUST — Prepare a short demonstration video.
+- [ ] — Deploy a public demonstration if feasible.
+- [ ] — Add an architecture diagram.
+5. Professional presentation
+- [ ] MUST — Prepare a concise explanation of Moka's purpose.
+- [ ] MUST — Be able to explain the backend architecture.
+- [ ] MUST — Explain how EF Core and database relationships work.
+- [ ] MUST — Explain JWT authentication.
+- [ ] MUST — Explain how React communicates with the API.
+- [ ] MUST — Be able to discuss technical decisions and trade-offs.
+- [ ] MUST — Be able to explain what you would improve next.
+- [ ] MUST — Add Moka to your CV and LinkedIn portfolio.
+- [ ] — Prepare answers to likely technical interview questions.
