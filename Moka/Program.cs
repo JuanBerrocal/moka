@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moka.Data;
 using Moka.middleware;
+using Moka.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+builder.Services.AddScoped<TransactionService>();
 
 var app = builder.Build();
 

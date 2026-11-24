@@ -2,7 +2,10 @@
 using Moka.Models;
 using Moka.Data;
 using Moka.DTOs;
+using Moka.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+
 
 namespace Moka.Controllers
 {
@@ -13,72 +16,28 @@ namespace Moka.Controllers
 
         private readonly MokaDbContext _mokaDbContext;
         private readonly ILogger<TransactionsController> _mokaLogger;
-        public TransactionsController(MokaDbContext mokaDbContext, ILogger<TransactionsController> mokaLogger)
+        private readonly TransactionService _transactionService;
+
+        public TransactionsController(MokaDbContext mokaDbContext, ILogger<TransactionsController> mokaLogger, TransactionService transactionService)
         {
             _mokaDbContext = mokaDbContext;
+
             _mokaLogger = mokaLogger;
+            _transactionService = transactionService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<TransactionDto>> CreateTransaction(CreateTransactionDto transactionDto)
+        public async Task<ActionResult<TransactionDto>> CreateTransaction(CreateTransactionDto transactionDto, CancellationToken cancellationToken)
         {
 
             _mokaLogger.LogInformation("Creating a new transaction.");
 
-            // Validations.
-            if (transactionDto == null)
-            {
-                return BadRequest("Transaction data is required.");
-            }
+            var result = await _transactionService.CreateTransactionAsync(transactionDto, cancellationToken);
 
-            var originExists = await _mokaDbContext.Stores.AnyAsync(s => s.Id == transactionDto.OriginId);
-            var destinationExists = await _mokaDbContext.Stores.AnyAsync(s => s.Id == transactionDto.DestinationId);
-
-            if (!originExists)
-            {
-                return BadRequest("Origin store does not exist.");
-            }
-
-            if (!destinationExists)
-            {
-                return BadRequest("Destination store does not exist.");
-            }
-
-            if (transactionDto.OriginId == transactionDto.DestinationId)
-            {
-                return BadRequest("Origin and destination stores can't be the same.");
-            }
-
-            var transaction = new Transaction
-            {
-                OriginId = transactionDto.OriginId,
-                DestinationId = transactionDto.DestinationId,
-                Date = transactionDto.Date,
-                MovementType = transactionDto.MovementType,
-                Process = transactionDto.Process?.ToUpper(),
-                DocumentNumber = transactionDto.DocumentNumber?.ToUpper(),
-                Notes = transactionDto.Notes,
-                Temporary = transactionDto.Temporary,
-                TransactionLines = transactionDto.TransactionLines.Select(lineDto => new TransactionLine
-                {
-                    MachineId = lineDto.MachineId,
-                    Notes = lineDto.Notes
-                }).ToList()
-
-            };
-
-            try
-            {
-                _mokaDbContext.Transactions.Add(transaction);
-                await _mokaDbContext.SaveChangesAsync();
-                //return CreatedAtAction(nameof(GetTransactionById), new { id = transaction.Id }, transaction);
-                return StatusCode(201, "Transaction created successfully.");
-            }
-            catch (Exception ex)
-            {
-                _mokaLogger.LogError(ex, "Error creating transaction.");
-                return StatusCode(500, "An error occurred while creating the transaction: " + ex.Message);
-            }
+            return StatusCode(201, "Transaction created successfully.");
+           
+           
         }
+        
     }
 }

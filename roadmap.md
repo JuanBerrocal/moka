@@ -85,7 +85,7 @@
 - [x] `Process` must not exceed 40 characters.
 - [x] `DocumentNumber` must not exceed 20 characters.
 - [ ] `Notes` must respect any length limit defined by the business.
-- [ ] `Temporary` must be a valid boolean value.
+- [x] `Temporary` must be a valid boolean value.
 
 #### 2. Transaction lines validations
 
@@ -119,16 +119,16 @@
 
 #### 5. Update machine locations
 
-- [ ] Update every involved machine's `StoreId`.
-- [ ] Set the new `StoreId` to the transaction's `DestinationId`.
-- [ ] Ensure all involved machines are updated, not just the first one.
+- [x] Update every involved machine's `StoreId`.
+- [x] Set the new `StoreId` to the transaction's `DestinationId`.
+- [x] Ensure all involved machines are updated, not just the first one.
 
 #### 6. Database persistence
 
-- [ ] Add the transaction to the EF Core context.
-- [ ] Save the transaction, its lines and machine updates together.
-- [ ] Use one `SaveChangesAsync()` operation.
-- [ ] Ensure database failures are logged.
+- [x] Add the transaction to the EF Core context.
+- [x] Save the transaction, its lines and machine updates together.
+- [x] Use one `SaveChangesAsync()` operation.
+- [x] Ensure database failures are logged.
 - [ ] Return HTTP 201 when creation succeeds.
 - [ ] Return appropriate HTTP 400 responses for invalid input.
 - [ ] Return an appropriate server error for unexpected failures.
