@@ -204,18 +204,153 @@ namespace Moka.Services
             return date >= new DateOnly(2000, 1, 1)
                 && date <= DateOnly.FromDateTime(DateTime.Today);
         }
-    }
 
-    public class CreateTransactionResult
-    {
-        public int TransactionId { get; set; }
-        public List<TransactionWarning> Warnings { get; set; } = new();
-    }
+        public class CreateTransactionResult
+        {
+            public int TransactionId { get; set; }
+            public List<TransactionWarning> Warnings { get; set; } = new();
+        }
 
-    public class TransactionWarning
-    {
-        public int MachineId { get; set; }
-        public string Message { get; set; } = string.Empty;
+        public class TransactionWarning
+        {
+            public int MachineId { get; set; }
+            public string Message { get; set; } = string.Empty;
+        }
+     
+        public async Task<PagedResult<TransactionDto>> GetTransactionsAsync(
+            TransactionQueryDto filters,
+            CancellationToken cancellationToken = default)
+        {
+            if (filters.FromDate.HasValue &&
+                filters.ToDate.HasValue &&
+                filters.FromDate > filters.ToDate)
+            {
+                throw new ValidationException(
+                    "FromDate cannot be later than ToDate.");
+            }
+
+            if (filters.OriginId.HasValue && filters.OriginId <= 0)
+                throw new ValidationException("Invalid origin store ID.");
+
+            if (filters.DestinationId.HasValue && filters.DestinationId <= 0)
+                throw new ValidationException("Invalid destination store ID.");
+
+            if (filters.MovementType.HasValue &&
+                (!Enum.IsDefined(typeof(MovementType), filters.MovementType.Value) ||
+                 filters.MovementType == MovementType.Unknown))
+            {
+                throw new ValidationException("Invalid movement type.");
+            }
+
+            var query = _context.Transactions.AsNoTracking().AsQueryable();
+
+            // 1. Apply filters
+
+            if (filters.OriginId.HasValue)
+                query = query.Where(t => t.OriginId == filters.OriginId.Value);
+
+            if (filters.DestinationId.HasValue)
+                query = query.Where(t => t.DestinationId == filters.DestinationId.Value);
+
+            if (filters.MovementType.HasValue)
+                query = query.Where(t => t.MovementType == filters.MovementType.Value);
+
+            if (filters.FromDate.HasValue)
+                query = query.Where(t => t.Date >= filters.FromDate.Value);
+
+            if (filters.ToDate.HasValue)
+                query = query.Where(t => t.Date <= filters.ToDate.Value);
+
+            if (filters.Temporary.HasValue)
+                query = query.Where(t => t.Temporary == filters.Temporary.Value);
+
+            // 2. Count matching transactions before pagination
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            // 3. Apply sorting
+
+            var sortBy = filters.SortBy?.Trim().ToLowerInvariant();
+
+            query = sortBy switch
+            {
+                "id" => filters.SortDescending
+                    ? query.OrderByDescending(t => t.Id)
+                    : query.OrderBy(t => t.Id),
+
+                "date" => filters.SortDescending
+                    ? query.OrderByDescending(t => t.Date)
+                    : query.OrderBy(t => t.Date),
+
+                "documentnumber" => filters.SortDescending
+                    ? query.OrderByDescending(t => t.DocumentNumber)
+                    : query.OrderBy(t => t.DocumentNumber),
+
+                "movementtype" => filters.SortDescending
+                    ? query.OrderByDescending(t => t.MovementType)
+                    : query.OrderBy(t => t.MovementType),
+
+                "originid" => filters.SortDescending
+                    ? query.OrderByDescending(t => t.OriginId)
+                    : query.OrderBy(t => t.OriginId),
+
+                "destinationid" => filters.SortDescending
+                    ? query.OrderByDescending(t => t.DestinationId)
+                    : query.OrderBy(t => t.DestinationId),
+
+                _ => throw new ValidationException(
+                    "Invalid sort field. Allowed: id, date, documentNumber, movementType, originId, destinationId.")
+            };
+
+            // 4. Add a stable secondary sort
+
+            query = query.ThenBy(t => t.Id);
+
+            // 5. Apply pagination
+
+            var skip = (long)(filters.Page - 1) * filters.PageSize;
+
+            var transactions = skip > int.MaxValue
+                ? new List<TransactionDto>()
+                : await query
+                    .Skip((int)skip)
+                    .Take(filters.PageSize)
+                    .Select(t => new TransactionDto
+                    {
+                        Id = t.Id,
+                        OriginId = t.OriginId,
+                        DestinationId = t.DestinationId,
+                        Date = t.Date,
+                        MovementType = t.MovementType,
+                        Process = t.Process,
+                        DocumentNumber = t.DocumentNumber,
+                        Notes = t.Notes,
+                        Temporary = t.Temporary,
+
+                        TransactionLines = t.TransactionLines
+                            .OrderBy(l => l.LineId)
+                            .Select(l => new TransactionLineDto
+                            {
+                                LineId = l.LineId,
+                                MachineId = l.MachineId,
+                                Notes = l.Notes
+                            })
+                            .ToList()
+                    })
+                    .ToListAsync(cancellationToken);
+
+            // 6. Return paginated result
+
+            return new PagedResult<TransactionDto>
+            {
+                TotalItems = totalCount,
+                Page = filters.Page,
+                PageSize = filters.PageSize,
+                Items = transactions
+            };
+        }
+
+
     }
 }
 
